@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">EyesOfSeoul</string>
+
+    <string-array name="intro">
+        <item>안녕하세요 </item>
+        <item>서울의 눈 입니다</item>
+    </string-array>
 </resources>
