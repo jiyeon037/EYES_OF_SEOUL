@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-<<<<<<< HEAD
+
     package="com.seoul.jiyeon.eyesofseoul">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-
-=======
-    package="com.example.gwi02.eyeseoul1">
->>>>>>> 943b1241949ab13f0a054533ef5ac1d61eaca36e
 
     <application
         android:allowBackup="true"
@@ -17,24 +13,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-<<<<<<< HEAD
-=======
-        </activity>
-        <activity android:name=".SecondActivity"/>
         <activity android:name=".IntroActivity">
->>>>>>> 943b1241949ab13f0a054533ef5ac1d61eaca36e
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-<<<<<<< HEAD
-        <activity android:name=".NewsActivity"></activity>
-=======
+            </activity>
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".SecondActivity"/>
+        <activity android:name=".NewsActivity"/>
         <activity android:name=".WeatherActivity"/>
->>>>>>> 943b1241949ab13f0a054533ef5ac1d61eaca36e
+
     </application>
 
 </manifest>
