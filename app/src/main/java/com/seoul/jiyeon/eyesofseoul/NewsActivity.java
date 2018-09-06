@@ -51,17 +51,9 @@ public class NewsActivity extends AppCompatActivity {
             Log.d("파싱전스트링",newsarray[1]);
 
             for(int i=0; i<2; i++) {
-                StringTokenizer st = new StringTokenizer(newsarray[i], "<b>");
+                StringTokenizer st = new StringTokenizer(newsarray[i], "<b>|</b>|&quot;");
                 while (st.hasMoreTokens()) {
-                    newsarray[i] = st.nextToken();
-                }
-                st = new StringTokenizer(newsarray[i], "<b/>");
-                while (st.hasMoreTokens()) {
-                    newsarray[i] = st.nextToken();
-                }
-                st = new StringTokenizer(newsarray[i], "&quot;");
-                while (st.hasMoreTokens()) {
-                    newsarray[i] = st.nextToken();
+                    newsarray[i] = st.nextToken().toString();
                 }
             }
 
