@@ -1,6 +1,7 @@
 package com.seoul.jiyeon.eyesofseoul;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.speech.tts.TextToSpeech;
@@ -8,6 +9,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -29,6 +32,7 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
     TextView desText;
     StringBuffer forAsynkTaskSb;
     String forAsynkTaskS;
+    LinearLayout layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +41,7 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         tts = new TextToSpeech(this,this);
         titleText = (TextView) findViewById(R.id.titleText);
-        desText = (TextView) findViewById(R.id.desText);
+        layout = (LinearLayout) findViewById(R.id.newslayout);
         permissionCheck();
 
         try {
@@ -50,30 +54,49 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         forAsynkTaskS = forAsynkTaskSb.toString();
 
+        String newstitle;
+        String newslink = null;
         String[] newsarray = new String[2];
+        
         try {
             newsarray = newsJsonParser(forAsynkTaskS);
 
-            Log.d("파싱전스트링",newsarray[0]);
-            Log.d("파싱전스트링",newsarray[1]);
-
-            for(int i=0; i<2; i++) {
-                StringTokenizer st = new StringTokenizer(newsarray[i], "<b>|</b>|&quot;");
+            newstitle = newsarray[0];
+            newslink = newsarray[1];
+            
+                StringTokenizer st = new StringTokenizer(newstitle, "<b>|</b>|&quot;");
                 while (st.hasMoreTokens()) {
-                    newsarray[i] = st.nextToken().toString();
+                    newstitle = st.nextToken().toString();
                 }
-            }
+
+            titleText.setText(newstitle);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        Log.d("파싱후스트링",newsarray[0]);
-        Log.d("파싱후스트링",newsarray[1]);
+        final String finalNewslink = newslink;
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DescActivity.class);
+                intent.putExtra("newslink", finalNewslink);
+                startActivity(intent);
+                finish();
+            }
+        });
 
-        titleText.setText(newsarray[0]);
-        desText.setText(newsarray[1]);
-
+        /*  // 다른 뉴스 원할 경우..
+        layout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), NewsActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+            }
+        });
+        */
     }
 
     // 일단 1개짜리 해놓고 어레이리스트 사용하는걸로
@@ -89,10 +112,10 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 JSONObject jObject = jsonArray.getJSONObject(i);
 
                 String title = jObject.getString("title");
-                String description = jObject.getString("description");
+                String link = jObject.getString("link");
 
                 newsarray[0] = title;
-                newsarray[1] = description;
+                newsarray[1] = link;
             }
         } catch(JSONException e) {
             e.printStackTrace();
@@ -124,7 +147,7 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
             StringBuffer sb = new StringBuffer();
             String clientID = "qoV_o0JFXTXLeGQHxVp5";
             String clientSecret = "NB1rRZLIVm";
-            int display = 1; // 검색 결과 개수
+            int display = 50; // 검색 결과 개수
 
             try {
                 String text = URLEncoder.encode("서울시","UTF-8");
