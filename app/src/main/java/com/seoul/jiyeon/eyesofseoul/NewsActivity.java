@@ -1,6 +1,10 @@
 package com.seoul.jiyeon.eyesofseoul;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.speech.tts.TextToSpeech;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,8 +22,9 @@ import java.net.URLEncoder;
 import java.util.StringTokenizer;
 import java.util.concurrent.ExecutionException;
 
-public class NewsActivity extends AppCompatActivity {
+public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
+    TextToSpeech tts;
     TextView titleText;
     TextView desText;
     StringBuffer forAsynkTaskSb;
@@ -30,8 +35,10 @@ public class NewsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
 
+        tts = new TextToSpeech(this,this);
         titleText = (TextView) findViewById(R.id.titleText);
         desText = (TextView) findViewById(R.id.desText);
+        permissionCheck();
 
         try {
             forAsynkTaskSb = new SearchAsynkTask().execute(forAsynkTaskS).get();
@@ -43,7 +50,7 @@ public class NewsActivity extends AppCompatActivity {
 
         forAsynkTaskS = forAsynkTaskSb.toString();
 
-        String[] newsarray = new String[1];
+        String[] newsarray = new String[2];
         try {
             newsarray = newsJsonParser(forAsynkTaskS);
 
@@ -93,6 +100,23 @@ public class NewsActivity extends AppCompatActivity {
         return newsarray;
     }
 
+    private void permissionCheck() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
+            }
+        }
+    }
+
+    @Override
+    public void onInit(int i) {
+        // String tts_title = 파싱한 뉴스제목 읽어 줄 것
+        // tts.speak(tts_title, TextToSpeech.QUEUE_ADD,null);
+        String tts_desc = "이 뉴스를 들으시려면 한 번 터치, 다른 뉴스를 들으시려면 길게 터치해주세요";
+        tts.speak(tts_desc, TextToSpeech.QUEUE_FLUSH,null);
+    }
+
 
     class SearchAsynkTask extends AsyncTask<String, String, StringBuffer> {
         @Override
@@ -103,7 +127,7 @@ public class NewsActivity extends AppCompatActivity {
             int display = 1; // 검색 결과 개수
 
             try {
-                String text = URLEncoder.encode("박원순","UTF-8");
+                String text = URLEncoder.encode("서울시","UTF-8");
                 String apiURL = "https://openapi.naver.com/v1/search/news?query="+ text + "&display=" + display + "&"; // JSON 결과
 
                 URL url = new URL(apiURL);
