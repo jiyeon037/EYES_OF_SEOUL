@@ -3,12 +3,41 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/midnight_bloom_size"
-    android:gravity="center">
+    android:gravity="center_horizontal"
+    android:id="@+id/rl1">
 
-    <TextView
-        android:id="@+id/tv1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="날씨 액티비티"
-        android:textColor="#ffffff" />
+
+        <ImageView
+            android:id="@+id/wIcon"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/sunny" />
+
+        <TextView
+            android:id="@+id/wText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/wIcon"
+            android:layout_alignTop="@+id/wIcon"
+            android:text="샘플"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:textSize="50dp"
+            android:layout_marginLeft="20dp" />
+
+        <TextView
+            android:id="@+id/wTemp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/wText"
+            android:layout_alignStart="@+id/wText"
+            android:text="99º"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:textSize="50dp"
+            />
+
+
+
 </RelativeLayout>

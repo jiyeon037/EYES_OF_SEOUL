@@ -29,35 +29,31 @@ import java.util.Date;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-public class WeatherActivity extends AppCompatActivity implements TextToSpeech.OnInitListener{
-    TextView wText, wTemp, tvDate;
+public class WeatherActivity2 extends AppCompatActivity implements TextToSpeech.OnInitListener {
+    TextView wText, highTemp, lowTemp;
     Document doc = null;
     RelativeLayout layout;
     ImageView wIcon;
     TextToSpeech tts;
-    GestureDetector gd = null;
+    GestureDetector gd;
 
-    String sDate = "";
+    String highTmp = "";
+    String lowTmp = "";
+    String amWeather = "";
+    String pmWeather = "";
     String sMonth = "";
-    String tmp = "";
-    String weather = "";
-    String hour = "";
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return gd.onTouchEvent(event);
-    }
+    String sDate = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_weather);
+        setContentView(R.layout.activity_weather_2);
 
         layout = findViewById(R.id.rl1);
-        wTemp = findViewById(R.id.wTemp);
+        highTemp = findViewById(R.id.highTemp);
+        lowTemp = findViewById(R.id.lowTemp);
         wText = findViewById(R.id.wText);
         wIcon = findViewById(R.id.wIcon);
-
 
         long now = System.currentTimeMillis();
         Date date = new Date(now);
@@ -67,6 +63,8 @@ public class WeatherActivity extends AppCompatActivity implements TextToSpeech.O
         sMonth = curMonth.format(date);
         sDate = curDate.format(date);
 
+        int idate = Integer.parseInt(sDate) + 1;
+        sDate =  Integer.toString(idate);
 
         GetXMLTask task = new GetXMLTask();
         task.execute("http://www.kma.go.kr/wid/queryDFSRSS.jsp?zone=1171056100");
@@ -85,26 +83,19 @@ public class WeatherActivity extends AppCompatActivity implements TextToSpeech.O
             }
 
             @Override
-            public boolean onSingleTapConfirmed(MotionEvent e) {
-                Intent intent = new Intent(getApplicationContext(), WeatherActivity2.class);
-                startActivity(intent);
-                finish();
-
-                return super.onSingleTapConfirmed(e);
-            }
-
-            @Override
             public void onLongPress(MotionEvent e) {
-                Intent intent = new Intent(getApplicationContext(), WeatherActivity.class);
+                Intent intent = new Intent(getApplicationContext(), WeatherActivity2.class);
                 startActivity(intent);
                 finish();
                 super.onLongPress(e);
             }
         });
-
-
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return gd.onTouchEvent(event);
+    }
 
     private void permissionCheck() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -116,7 +107,8 @@ public class WeatherActivity extends AppCompatActivity implements TextToSpeech.O
     }
     @Override
     public void onInit(int i) {
-        String isIntroduce = sMonth +"월 " +sDate+"일. " + "오늘 날씨 입니다. 오늘 "+ hour +"시 날씨는 "+ weather + ". 온도는 "+ tmp +"도 입니다. 내일 날씨 예보를 들으시려면 화면을 한 번," +
+        String isIntroduce = "내일 날씨 입니다. 내일 오전 날씨는 "+ amWeather + ". 오후 날씨는 "+ pmWeather +" 입니다. " +
+                "내일의 최고 기온은"+ highTmp + "도. 최저 기온은 " + lowTmp + "도 입니다." +
                 " 다시 들으시려면 화면을 길게 터치해주세요. 초기 메뉴로 돌아가시려면 화면을 두 번 터치해주세요.";
         tts.speak(isIntroduce, TextToSpeech.QUEUE_FLUSH,null);
     }
@@ -145,9 +137,11 @@ public class WeatherActivity extends AppCompatActivity implements TextToSpeech.O
         @Override
         protected void onPostExecute(Document document) {
 
-            float ftemp;
-            int itemp;
+            float fLowTmp,fHighTmp;
+            int iLowTmp,iHighTmp;
+
             String day="";
+            String hour="";
             NodeList nodeList = doc.getElementsByTagName("data");
 
             for(int i=0; i<nodeList.getLength();i++){
@@ -156,75 +150,48 @@ public class WeatherActivity extends AppCompatActivity implements TextToSpeech.O
 
                 Element element = (Element) node;
 
-                if(i==0){
-                    NodeList nameList = element.getElementsByTagName("temp");
-                    Element nameElement = (Element)nameList.item(0);
-                    nameList = nameElement.getChildNodes();
-                    NodeList dayList = element.getElementsByTagName("day");
-                    day = dayList.item(0).getChildNodes().item(0).getNodeValue();
+                NodeList dayList = element.getElementsByTagName("day");
+                day = dayList.item(0).getChildNodes().item(0).getNodeValue();
 
-                    if(day.equals("1")){
-                        int date;
-                        int month;
-                        if(sMonth=="1"||sMonth=="3"||sMonth=="5"||sMonth=="7"||sMonth=="8"||sMonth=="10"||sMonth=="12"){
-                            if(sDate=="31"){
-                                sDate="1";
-                                month = Integer.parseInt(sMonth);
-                                month += 1;
-                                sDate = Integer.toString(month);
-                            }else{
-                                date = Integer.parseInt(sDate);
-                                date += 1;
-                                sDate = Integer.toString(date);
-                            }
-                        }else if(sMonth=="4"||sMonth=="6"||sMonth=="9"||sMonth=="11"){
-                            if(sDate=="30"){
-                                sDate="1";
-                                month = Integer.parseInt(sMonth);
-                                month += 1;
-                                sDate = Integer.toString(month);
-                            }else{
-                                date = Integer.parseInt(sDate);
-                                date += 1;
-                                sDate = Integer.toString(date);
-                            }
-                        }else if(sMonth == "2"){
-                            if(sDate=="28"){
-                                sDate="1";
-                                sMonth = "3";
-                            }else{
-                                date = Integer.parseInt(sDate);
-                                date += 1;
-                                sDate = Integer.toString(date);
-                            }
-                        }
+                NodeList hourList = element.getElementsByTagName("hour");
+                hour = hourList.item(0).getChildNodes().item(0).getNodeValue();
 
+                if(day.equals("1")){
+                    if(hour.equals("9")){
+                        NodeList lowTmpList = element.getElementsByTagName("tmn");
+                        lowTmp = lowTmpList.item(0).getChildNodes().item(0).getNodeValue();
+                        fLowTmp = Float.parseFloat(lowTmp);
+                        iLowTmp = (int)fLowTmp;
+                        lowTmp = Integer.toString(iLowTmp);
+
+                        NodeList highTmpList = element.getElementsByTagName("tmx");
+                        highTmp = highTmpList.item(0).getChildNodes().item(0).getNodeValue();
+                        fHighTmp = Float.parseFloat(highTmp);
+                        iHighTmp = (int)fHighTmp;
+                        highTmp = Integer.toString(iHighTmp);
+
+                        NodeList amWeatherList = element.getElementsByTagName("wfKor");
+                        amWeather = amWeatherList.item(0).getChildNodes().item(0).getNodeValue();
                     }
-
-                    tmp = ((Node)nameList.item(0)).getNodeValue();
-                    ftemp = Float.parseFloat(tmp);
-                    itemp = (int)ftemp;
-                    tmp = Integer.toString(itemp)+"º";
-
-                    NodeList hourList = element.getElementsByTagName("hour");
-                    hour = hourList.item(0).getChildNodes().item(0).getNodeValue();
-
-                    NodeList weatherList = element.getElementsByTagName("wfKor");
-                    weather = weatherList.item(0).getChildNodes().item(0).getNodeValue();
+                    if(hour.equals("15")){
+                        NodeList pmWeatherList = element.getElementsByTagName("wfKor");
+                        pmWeather = pmWeatherList.item(0).getChildNodes().item(0).getNodeValue();
+                    }
 
                 }
             } //end of for
 
-            wTemp.setText(tmp);
-            wText.setText(weather);
+            lowTemp.setText(lowTmp+"º");
+            highTemp.setText(highTmp+"º");
+            wText.setText(amWeather);
 
-            if(weather.equals("맑음")){
+            if(amWeather.equals("맑음")){
                 wIcon.setImageResource(R.drawable.sunny);
-            }else if(weather.equals("구름 조금") || weather.equals("구름 많음")) {
+            }else if(amWeather.equals("구름 조금") || amWeather.equals("구름 많음")) {
                 wIcon.setImageResource(R.drawable.suncloud);
-            }else if(weather.equals("흐림")){
+            }else if(amWeather.equals("흐림")){
                 wIcon.setImageResource(R.drawable.cloudy);
-            }else if(weather.equals("비")){
+            }else if(amWeather.equals("비")){
                 wIcon.setImageResource(R.drawable.rainy);
             }
 

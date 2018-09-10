@@ -8,15 +8,14 @@ import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.LinearLayout;
 
-public class SecondActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
-
+public class SecondActivity extends AppCompatActivity implements TextToSpeech.OnInitListener{
     TextToSpeech tts;
     LinearLayout layout1;
+    GestureDetector gd=null;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,24 +25,29 @@ public class SecondActivity extends AppCompatActivity implements TextToSpeech.On
         tts = new TextToSpeech(this,this);
         permissionCheck();
 
-        layout1.setOnClickListener(new View.OnClickListener() {
+        gd = new GestureDetector(layout1.getContext(), new GestureDetector.SimpleOnGestureListener(){
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), WeatherActivity.class);
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                Intent intent = new Intent(SecondActivity.this, WeatherActivity.class);
                 startActivity(intent);
                 finish();
+                return super.onSingleTapConfirmed(e);
             }
-        });
 
-        layout1.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View view) {
+            public boolean onDoubleTap(MotionEvent e) {
                 Intent intent = new Intent(getApplicationContext(), NewsActivity.class);
                 startActivity(intent);
                 finish();
-                return true;
+
+                return super.onDoubleTap(e);
             }
         });
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return gd.onTouchEvent(event);
     }
 
     private void permissionCheck() {
@@ -56,7 +60,7 @@ public class SecondActivity extends AppCompatActivity implements TextToSpeech.On
     }
     @Override
     public void onInit(int i) {
-        String isIntroduce = "오늘의 날씨를 들으시려면 화면을 한 번, 오늘의 뉴스를 들으시려면 화면을 길게 터치해주세요. ";
+        String isIntroduce = "날씨 예보를 들으시려면 화면을 한 번, 오늘의 뉴스를 들으시려면 화면을 두 번 터치해주세요. ";
         tts.speak(isIntroduce, TextToSpeech.QUEUE_FLUSH,null);
     }
 
