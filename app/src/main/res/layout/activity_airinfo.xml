@@ -7,12 +7,13 @@
     android:gravity="center">
 
         <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
             android:layout_above="@+id/airnum"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/airinfo"
-            android:layout_marginTop="100dp"
+            android:src="@drawable/bigsmile"
+            android:layout_marginTop="85dp"
+            android:layout_marginBottom="10dp"
             android:id="@+id/airimg"/>
         <TextView
             android:layout_width="wrap_content"
