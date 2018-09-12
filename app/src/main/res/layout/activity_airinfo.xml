@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/midnight_bloom_size"
+    android:id="@+id/layout"
+    android:gravity="center">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_above="@+id/airnum"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/airinfo"
+            android:layout_marginTop="100dp"
+            android:id="@+id/airimg"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="100"
+            android:textColor="#ffffff"
+            android:textSize="80dp"
+            android:textStyle="bold"
+            android:id="@+id/airnum"/>
+
+        <TextView
+            android:id="@+id/airtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/airnum"
+            android:layout_centerHorizontal="true"
+            android:text="좋음"
+            android:textColor="#ffffff"
+            android:textSize="50dp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="미세먼지"
+                    android:textColor="#ffffff"
+                    android:textSize="27dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="100㎍/㎡"
+                    android:textColor="#ffffff"
+                    android:textSize="27dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="좋음"
+                    android:textColor="#ffffff"
+                    android:textSize="27dp" />
+        </LinearLayout>
+
+
+
+</RelativeLayout>

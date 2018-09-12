@@ -24,6 +24,8 @@
         <activity android:name=".NewsActivity" />
         <activity android:name=".WeatherActivity" />
         <activity android:name=".DescActivity"></activity>
+        <activity android:name=".WeatherActivity2"/>
+        <activity android:name=".AirinfoActivity"/>
     </application>
 
 </manifest>

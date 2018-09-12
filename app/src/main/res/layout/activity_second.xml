@@ -15,31 +15,54 @@ android:orientation="vertical"
     android:orientation="vertical"
     android:gravity="center">
     <ImageView
-        android:layout_width="170dp"
-        android:layout_height="170dp"
+        android:layout_width="135dp"
+        android:layout_height="135dp"
         android:src="@drawable/sun"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#ffffff"
-        android:text="오늘의 날씨"
+        android:text="날씨 예보"
         android:textStyle="bold"
-        android:textSize="40dp"
+        android:textSize="35dp"
         android:layout_gravity="center"/>
 </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="#404c76"
+        android:orientation="vertical"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="115dp"
+            android:layout_height="115dp"
+            android:src="@drawable/airinfo"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:text="대기 현황"
+            android:textStyle="bold"
+            android:textSize="35dp"
+            android:layout_gravity="center"/>
+    </LinearLayout>
 
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_weight="1"
-    android:background="#425087"
+    android:background="#4e4376"
     android:orientation="vertical"
     android:gravity="center">
 
     <ImageView
-        android:layout_width="170dp"
-        android:layout_height="170dp"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:src="@drawable/newspaper"
         android:layout_gravity="center" />
     <TextView
@@ -48,7 +71,7 @@ android:orientation="vertical"
         android:textColor="#ffffff"
         android:text="오늘의 뉴스"
         android:textStyle="bold"
-        android:textSize="40dp"
+        android:textSize="35dp"
         android:layout_gravity="center"/>
 </LinearLayout>
 
