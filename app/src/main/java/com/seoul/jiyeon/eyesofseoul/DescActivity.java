@@ -1,13 +1,19 @@
 package com.seoul.jiyeon.eyesofseoul;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,11 +27,36 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
     CrwalerTask crwalerTask = new CrwalerTask();
     TextToSpeech tts;
     String crwaledDesc;
+    ImageView ivSpeaker;
+    AnimationDrawable ani;
+    LinearLayout layout;
+    GestureDetector gd = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_desc);
+
+        ivSpeaker = findViewById(R.id.ivSpeaker);
+        layout = findViewById(R.id.layout);
+
+        ani=(AnimationDrawable)ivSpeaker.getDrawable();
+        ani.setOneShot(false);
+
+        ani.start();
+
+        gd = new GestureDetector(layout.getContext(), new GestureDetector.SimpleOnGestureListener(){
+
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                Intent intent = new Intent(getApplicationContext(), SecondActivity.class);
+                startActivity(intent);
+                finish();
+                return super.onDoubleTap(e);
+            }
+
+        });
+
 
         tts = new TextToSpeech(this,this);
         permissionCheck();
@@ -40,6 +71,11 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         Log.d("cccccccccccccc",crwaledDesc);
 
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return gd.onTouchEvent(event);
     }
 
     private void permissionCheck() {
