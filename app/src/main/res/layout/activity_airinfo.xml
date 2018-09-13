@@ -57,7 +57,8 @@
                     android:layout_marginLeft="30dp"
                     android:text="100㎍/㎡"
                     android:textColor="#ffffff"
-                    android:textSize="27dp" />
+                    android:textSize="27dp"
+                    android:id="@+id/dustnum"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -65,7 +66,8 @@
                     android:layout_marginLeft="30dp"
                     android:text="좋음"
                     android:textColor="#ffffff"
-                    android:textSize="27dp" />
+                    android:textSize="27dp"
+                    android:id="@+id/dusttext"/>
         </LinearLayout>
 
 

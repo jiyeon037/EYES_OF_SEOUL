@@ -36,7 +36,7 @@ public class SecondActivity extends AppCompatActivity implements TextToSpeech.On
 
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-                Intent intent = new Intent(getApplicationContext(), NewsActivity.class);
+                Intent intent = new Intent(getApplicationContext(), AirinfoActivity.class);
                 startActivity(intent);
                 finish();
                 return super.onDoubleTap(e);
@@ -67,7 +67,7 @@ public class SecondActivity extends AppCompatActivity implements TextToSpeech.On
     }
     @Override
     public void onInit(int i) {
-        String isIntroduce = "날씨 예보를 들으시려면 화면을 한 번, 대기 현황을 들으시려면 화면을 두 번, 오늘의 뉴스를 들으시려면 화면을 길게 터치해주세요. ";
+        String isIntroduce = "서울시 날씨 예보를 들으시려면 화면을 한 번, 대기 현황을 들으시려면 화면을 두 번, 오늘의 뉴스를 들으시려면 화면을 길게 터치해주세요. ";
         tts.speak(isIntroduce, TextToSpeech.QUEUE_FLUSH,null);
     }
 

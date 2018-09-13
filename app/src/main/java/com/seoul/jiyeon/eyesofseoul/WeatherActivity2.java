@@ -107,7 +107,7 @@ public class WeatherActivity2 extends AppCompatActivity implements TextToSpeech.
     }
     @Override
     public void onInit(int i) {
-        String isIntroduce = "내일 날씨 입니다. 내일 오전 날씨는 "+ amWeather + ". 오후 날씨는 "+ pmWeather +" 입니다. " +
+        String isIntroduce = "내일의 서울 날씨 입니다. 내일 오전 날씨는 "+ amWeather + ". 오후 날씨는 "+ pmWeather +" 입니다. " +
                 "내일의 최고 기온은"+ highTmp + "도. 최저 기온은 " + lowTmp + "도 입니다." +
                 " 다시 들으시려면 화면을 길게 터치해주세요. 초기 메뉴로 돌아가시려면 화면을 두 번 터치해주세요.";
         tts.speak(isIntroduce, TextToSpeech.QUEUE_FLUSH,null);

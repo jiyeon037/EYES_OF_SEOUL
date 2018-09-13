@@ -116,7 +116,7 @@ public class WeatherActivity extends AppCompatActivity implements TextToSpeech.O
     }
     @Override
     public void onInit(int i) {
-        String isIntroduce = sMonth +"월 " +sDate+"일. " + hour +"시 날씨는 "+ weather + ". 온도는 "+ tmp +"도 입니다. 내일 날씨 예보를 들으시려면 화면을 한 번," +
+        String isIntroduce = sMonth +"월 " +sDate+"일 " + hour +"시. 서울 날씨는 "+ weather + ". 온도는 "+ tmp +"도 입니다. 내일 날씨 예보를 들으시려면 화면을 한 번," +
                 " 다시 들으시려면 화면을 길게 터치해주세요. 초기 메뉴로 돌아가시려면 화면을 두 번 터치해주세요.";
         tts.speak(isIntroduce, TextToSpeech.QUEUE_FLUSH,null);
     }
