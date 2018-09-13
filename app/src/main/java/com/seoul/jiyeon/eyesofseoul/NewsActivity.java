@@ -4,10 +4,10 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -29,7 +29,6 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
     TextToSpeech tts;
     TextView titleText;
-    TextView desText;
     StringBuffer forAsynkTaskSb;
     String forAsynkTaskS;
     LinearLayout layout;
@@ -63,12 +62,15 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
             newstitle = newsarray[0];
             newslink = newsarray[1];
+
+            Log.d("11111111111111",newstitle);
             
                 StringTokenizer st = new StringTokenizer(newstitle, "<b>|</b>|&quot;");
                 while (st.hasMoreTokens()) {
                     newstitle = st.nextToken().toString();
                 }
 
+            Log.d("22222222222222",newstitle);
             titleText.setText(newstitle);
 
         } catch (JSONException e) {
@@ -147,7 +149,7 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
             StringBuffer sb = new StringBuffer();
             String clientID = "qoV_o0JFXTXLeGQHxVp5";
             String clientSecret = "NB1rRZLIVm";
-            int display = 50; // 검색 결과 개수
+            int display = 1; // 검색 결과 개수
 
             try {
                 String text = URLEncoder.encode("서울시","UTF-8");
