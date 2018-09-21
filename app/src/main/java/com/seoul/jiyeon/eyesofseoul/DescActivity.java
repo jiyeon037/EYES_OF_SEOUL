@@ -19,6 +19,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
@@ -31,6 +32,13 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
     AnimationDrawable ani;
     LinearLayout layout;
     GestureDetector gd = null;
+    String articleURL;
+    int seq;
+    int intro = 0;
+
+    Elements articeBody = null;
+    Elements articleBodyContents = null;
+   // Elements newsEndContents = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +53,15 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         ani.start();
 
+        articeBody = null;
+        articleBodyContents = null;
+        //newsEndContents = null;
+
+        Intent intent = getIntent();
+        articleURL = intent.getStringExtra("newslink");
+        seq = intent.getIntExtra("seq",0);
+        intro = intent.getIntExtra("intro",0);
+
         gd = new GestureDetector(layout.getContext(), new GestureDetector.SimpleOnGestureListener(){
 
             @Override
@@ -52,14 +69,27 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 Intent intent = new Intent(getApplicationContext(), SecondActivity.class);
                 startActivity(intent);
                 finish();
+
                 return super.onDoubleTap(e);
             }
 
+            @Override
+            public void onLongPress(MotionEvent e) {
+                Intent intent = new Intent(getApplicationContext(),NewsActivity.class);
+                seq += 1;
+                intent.putExtra("seq",seq);
+                intent.putExtra("intro",1);
+                startActivity(intent);
+                finish();
+                super.onLongPress(e);
+            }
         });
 
 
         tts = new TextToSpeech(this,this);
         permissionCheck();
+
+
 
         try {
             crwaledDesc = crwalerTask.execute(crwaledDesc).get();
@@ -89,29 +119,59 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
     @Override
     public void onInit(int i) {
-        tts.speak(crwaledDesc, TextToSpeech.QUEUE_FLUSH,null);
+
+        if(intro == 0){
+            tts.speak("뉴스를 재생합니다. 중간에 화면을 길게 누르면 다음 뉴스 제목을 재생합니다. 화면을 두 번 터치하시면 초기 메뉴로 돌아갑니다. " + crwaledDesc, TextToSpeech.QUEUE_FLUSH,null);
+        }else if(intro != 0){
+            tts.speak(crwaledDesc, TextToSpeech.QUEUE_FLUSH,null);
+        }
+
     }
 
     class CrwalerTask extends AsyncTask<String, Void, String>{
-
-        //Intent intent = getIntent();
-        //String articleURL = intent.getStringExtra("newslink");
-        String testURL = "https://news.naver.com/main/read.nhn?mode=LSD&mid=sec&sid1=103&oid=028&aid=0002424560";
 
         @Override
         protected String doInBackground(String... strings) {
             Document doc = null;
             try {
-                doc = Jsoup.connect(testURL).get();
+                doc = Jsoup.connect(articleURL).get();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Elements ele = doc.select("div#articleBodyContents");
-            String str = ele.text();
+
+            String str = "";
+
+
+            articeBody = doc.select("div#articeBody");
+
+            articleBodyContents = doc.select("div#articleBodyContents");
+
+            //newsEndContents = doc.select("div#newsEndContents");
+
+
+            if(articeBody != null){
+                str = articeBody.text();
+            }
+
+
+            if(articleBodyContents != null) {
+                str = articleBodyContents.text();
+            }
+/*
+            if(newsEndContents != null){
+                str = newsEndContents.text();
+            }
+*/
 
             Log.d("bbbbbbbbbbbbbb",str);
 
             return str;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        tts.shutdown();
     }
 }

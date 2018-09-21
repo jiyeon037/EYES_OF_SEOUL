@@ -9,6 +9,8 @@ import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,6 +24,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.concurrent.ExecutionException;
 
@@ -32,6 +35,24 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
     StringBuffer forAsynkTaskSb;
     String forAsynkTaskS;
     LinearLayout layout;
+    GestureDetector gd = null;
+
+    int count;
+    int index = 0;
+    int seq = 0;
+    int display = 50; // 검색 결과 개수
+    int intro = 0;
+
+    String[] newstitle = new String[display];
+    String[] newslink = new String[display];
+    String[][] getAll = new String[display][2];
+    String finalNewslink;
+    String title, link;
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return gd.onTouchEvent(event);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +64,10 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
         layout = (LinearLayout) findViewById(R.id.newslayout);
         permissionCheck();
 
+        Intent intent = getIntent();
+        seq = intent.getIntExtra("seq", 0);
+        intro = intent.getIntExtra("intro",0);
+
         try {
             forAsynkTaskSb = new SearchAsynkTask().execute(forAsynkTaskS).get();
         } catch (InterruptedException e) {
@@ -53,76 +78,109 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         forAsynkTaskS = forAsynkTaskSb.toString();
 
-        String newstitle;
-        String newslink = null;
-        String[] newsarray = new String[2];
-        
+        String[][] newsarray;
+
         try {
             newsarray = newsJsonParser(forAsynkTaskS);
+            int j=0;
+            for(int i=0; i<count; i++){
 
-            newstitle = newsarray[0];
-            newslink = newsarray[1];
+                Log.d("33333333333",newsarray[i][0]);
+                Log.d("33333333333",newsarray[i][1]);
+                if(newsarray[i][1].contains("news.naver.com")){
+                    newstitle[j] = newsarray[i][0];
+                    newslink[j] = newsarray[i][1];
 
-            Log.d("11111111111111",newstitle);
-            
+                    if(newstitle[j].contains("<b>")){
+                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;","");
+                    }else if(newstitle[j].contains("</b>")){
+                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;","");
+                    }else if(newstitle[j].contains("&quot;")){
+                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;","");
+                    }
+                    j++;
+                }
+            }
+
+
+            for(int i=0; i<j; i++){
+                Log.d("11111111111111",newstitle[i]);
+                Log.d("2222222222222",newslink[i]);
+            }
+
+
+      /*
                 StringTokenizer st = new StringTokenizer(newstitle, "<b>|</b>|&quot;");
                 while (st.hasMoreTokens()) {
                     newstitle = st.nextToken().toString();
                 }
+*/
+            //Log.d("22222222222222",newstitle);
 
-            Log.d("22222222222222",newstitle);
-            titleText.setText(newstitle);
+            titleText.setText(newstitle[seq]);
+
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        final String finalNewslink = newslink;
-        layout.setOnClickListener(new View.OnClickListener() {
+        finalNewslink = newslink[seq];
+
+        gd = new GestureDetector(layout.getContext(), new GestureDetector.SimpleOnGestureListener(){
+
             @Override
-            public void onClick(View v) {
+            public boolean onDoubleTap(MotionEvent e) {
+                Intent intent = new Intent(getApplicationContext(), SecondActivity.class);
+                startActivity(intent);
+                finish();
+                return super.onDoubleTap(e);
+            }
+
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
                 Intent intent = new Intent(getApplicationContext(), DescActivity.class);
                 intent.putExtra("newslink", finalNewslink);
+                intent.putExtra("seq",seq);
+                intent.putExtra("intro",intro);
                 startActivity(intent);
                 finish();
+                return super.onSingleTapConfirmed(e);
             }
-        });
 
-        /*  // 다른 뉴스 원할 경우..
-        layout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View view) {
+            public void onLongPress(MotionEvent e) {
                 Intent intent = new Intent(getApplicationContext(), NewsActivity.class);
+                seq += 1;
+                intent.putExtra("seq",seq);
+                intent.putExtra("intro",intro);
                 startActivity(intent);
                 finish();
-                return true;
+                super.onLongPress(e);
             }
+
         });
-        */
     }
 
     // 일단 1개짜리 해놓고 어레이리스트 사용하는걸로
-    public String[] newsJsonParser(String jsonString) throws JSONException {
-
-        String[] newsarray = new String[2];
+    public String[][] newsJsonParser(String jsonString) throws JSONException {
 
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONArray jsonArray = jsonObject.getJSONArray("items");
+            count = jsonArray.length();
 
-            for(int i=0; i<jsonArray.length(); i++) {
+            for(int i=0; i<count; i++) {
                 JSONObject jObject = jsonArray.getJSONObject(i);
 
-                String title = jObject.getString("title");
-                String link = jObject.getString("link");
+                getAll[i][0] = jObject.getString("title");
+                getAll[i][1] = jObject.getString("link");
 
-                newsarray[0] = title;
-                newsarray[1] = link;
             }
         } catch(JSONException e) {
             e.printStackTrace();
         }
-        return newsarray;
+        return getAll;
+
     }
 
     private void permissionCheck() {
@@ -136,9 +194,7 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
     @Override
     public void onInit(int i) {
-        // String tts_title = 파싱한 뉴스제목 읽어 줄 것
-        // tts.speak(tts_title, TextToSpeech.QUEUE_ADD,null);
-        String tts_desc = "이 뉴스를 들으시려면 한 번 터치, 다른 뉴스를 들으시려면 길게 터치해주세요";
+        String tts_desc = newstitle[seq]+". 이 뉴스를 들으시려면 한 번 터치, 다른 뉴스를 들으시려면 길게 터치해주세요";
         tts.speak(tts_desc, TextToSpeech.QUEUE_FLUSH,null);
     }
 
@@ -149,7 +205,7 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
             StringBuffer sb = new StringBuffer();
             String clientID = "qoV_o0JFXTXLeGQHxVp5";
             String clientSecret = "NB1rRZLIVm";
-            int display = 1; // 검색 결과 개수
+
 
             try {
                 String text = URLEncoder.encode("서울시","UTF-8");
@@ -177,13 +233,19 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
             }catch (Exception e){
                 e.printStackTrace();
             }
+
             return sb;
         }
 
         @Override
-        protected void onPostExecute(StringBuffer stringBuffer) {
+        protected void onPostExecute(StringBuffer jsonString) {
 
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        tts.shutdown();
+    }
 }

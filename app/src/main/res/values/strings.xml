@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EyesOfSeoul</string>
+    <string name="app_name">서울의눈</string>
 
     <string-array name="intro">
         <item>안녕하세요 </item>
