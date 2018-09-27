@@ -46,7 +46,6 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
     int display = 50; // 검색 결과 개수
     int intro = 0;
 
-    String[] newsdesc = new String[display];
     String[] newstitle = new String[display];
     String[] newslink = new String[display];
     String[][] getAll = new String[display][2];
@@ -87,22 +86,28 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
         try {
             newsarray = newsJsonParser(forAsynkTaskS);
             int j=0;
-            for(int i=0; i<count; i++){
+            for(int i=0; i<count; i++) {
 
-                Log.d("33333333333",newsarray[i][0]);
-                Log.d("33333333333",newsarray[i][1]);
-                if(newsarray[i][1].contains("news.naver.com")){
+                Log.d("33333333333", newsarray[i][0]);
+                Log.d("33333333333", newsarray[i][1]);
+                if (newsarray[i][1].contains("news.naver.com")) {
                     newstitle[j] = newsarray[i][0];
                     newslink[j] = newsarray[i][1];
 
-                    if(newstitle[j].contains("<b>")){
-                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;","");
-                    }else if(newstitle[j].contains("</b>")){
-                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;","");
-                    }else if(newstitle[j].contains("&quot;")){
-                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;","");
+                    if (newstitle[j].contains("<b>")) {
+                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;|&amp;|&lt;|&gt;", "");
+                    } else if (newstitle[j].contains("</b>")) {
+                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;|&amp;|&lt;|&gt;", "");
+                    } else if (newstitle[j].contains("&quot;")) {
+                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;|&amp;|&lt;|&gt;", "");
+                    } else if (newstitle[j].contains("&amp;")) {
+                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;|&amp;|&lt;|&gt;", "");
+                    } else if (newstitle[j].contains("&lt;")) {
+                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;|&amp;|&lt;|&gt;", "");
+                    } else if (newstitle[j].contains("&gt;")) {
+                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;|&amp;|&lt;|&gt;", "");
+                        j++;
                     }
-                    j++;
                 }
             }
 
