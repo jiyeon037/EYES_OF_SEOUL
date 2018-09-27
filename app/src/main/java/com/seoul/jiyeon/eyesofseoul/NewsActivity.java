@@ -18,8 +18,11 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -43,6 +46,7 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
     int display = 50; // 검색 결과 개수
     int intro = 0;
 
+    String[] newsdesc = new String[display];
     String[] newstitle = new String[display];
     String[] newslink = new String[display];
     String[][] getAll = new String[display][2];
@@ -161,10 +165,10 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
         });
     }
 
-    // 일단 1개짜리 해놓고 어레이리스트 사용하는걸로
     public String[][] newsJsonParser(String jsonString) throws JSONException {
 
         try {
+            Document doc = null;
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONArray jsonArray = jsonObject.getJSONArray("items");
             count = jsonArray.length();
@@ -182,6 +186,8 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
         return getAll;
 
     }
+
+
 
     private void permissionCheck() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {

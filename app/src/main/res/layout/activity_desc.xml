@@ -16,4 +16,5 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:src="@drawable/anim_speaker" />
+
 </LinearLayout>

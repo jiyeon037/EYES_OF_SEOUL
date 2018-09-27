@@ -14,11 +14,11 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -99,8 +99,6 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
             e.printStackTrace();
         }
 
-        Log.d("cccccccccccccc",crwaledDesc);
-
     }
 
     @Override
@@ -149,19 +147,34 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
             //newsEndContents = doc.select("div#newsEndContents");
 
 
-            if(articeBody != null){
+            if(!articeBody.isEmpty()){
                 str = articeBody.text();
             }
 
 
-            if(articleBodyContents != null) {
+            if(!articleBodyContents.isEmpty()) {
                 str = articleBodyContents.text();
             }
+
 /*
             if(newsEndContents != null){
                 str = newsEndContents.text();
             }
 */
+            if(articeBody == null || articleBodyContents == null) { // 디버깅 위해 잠시 추가
+                Log.d("nnnnnnnnnnnnn","null 발생 !!!!!!!!!!");
+            }
+
+            if(articeBody != null || articleBodyContents != null) { // 디버깅 위해 잠시 추가
+                Log.d("nnnnnnnnnnnnn","null 발생 안함 !!!!!!!!!!");
+                if(str == null){
+                    Log.d("nnnnnnnnnnnn","str null 발생!!!!!!!!!1");
+                } else if (str.isEmpty()) {
+                    Log.d("nnnnnnnnnnnnnnn","str 비어있음!!!!!!!!!!");
+
+                }
+
+            }
 
             Log.d("bbbbbbbbbbbbbb",str);
 
