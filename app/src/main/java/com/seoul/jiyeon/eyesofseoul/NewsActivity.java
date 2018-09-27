@@ -18,11 +18,8 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -43,7 +40,7 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
     int count;
     int index = 0;
     int seq = 0;
-    int display = 50; // 검색 결과 개수
+    int display = 100; // 검색 결과 개수
     int intro = 0;
 
     String[] newstitle = new String[display];
@@ -88,9 +85,9 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
             int j=0;
             for(int i=0; i<count; i++) {
 
-                Log.d("33333333333", newsarray[i][0]);
-                Log.d("33333333333", newsarray[i][1]);
-                if (newsarray[i][1].contains("news.naver.com")) {
+                Log.d("33333333333",newsarray[i][0]);
+                Log.d("33333333333",newsarray[i][1]);
+                if(newsarray[i][1].contains("https://news.naver.com")){
                     newstitle[j] = newsarray[i][0];
                     newslink[j] = newsarray[i][1];
 
@@ -106,28 +103,21 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
                         newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;|&amp;|&lt;|&gt;", "");
                     } else if (newstitle[j].contains("&gt;")) {
                         newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;|&amp;|&lt;|&gt;", "");
-                        j++;
                     }
+                    j++;
                 }
             }
-
 
             for(int i=0; i<j; i++){
                 Log.d("11111111111111",newstitle[i]);
                 Log.d("2222222222222",newslink[i]);
             }
 
-
-      /*
-                StringTokenizer st = new StringTokenizer(newstitle, "<b>|</b>|&quot;");
-                while (st.hasMoreTokens()) {
-                    newstitle = st.nextToken().toString();
-                }
-*/
-            //Log.d("22222222222222",newstitle);
-
-            titleText.setText(newstitle[seq]);
-
+            if(newstitle[seq] == null){
+                titleText.setText("목록 끝");
+            }else{
+                titleText.setText(newstitle[seq]);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -170,10 +160,10 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
         });
     }
 
+    // 일단 1개짜리 해놓고 어레이리스트 사용하는걸로
     public String[][] newsJsonParser(String jsonString) throws JSONException {
 
         try {
-            Document doc = null;
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONArray jsonArray = jsonObject.getJSONArray("items");
             count = jsonArray.length();
@@ -192,8 +182,6 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
     }
 
-
-
     private void permissionCheck() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -205,7 +193,14 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
     @Override
     public void onInit(int i) {
-        String tts_desc = newstitle[seq]+". 이 뉴스를 들으시려면 한 번 터치, 다른 뉴스를 들으시려면 길게 터치해주세요";
+        String tts_desc;
+
+        if(newstitle[seq] == null){
+            tts_desc = "목록이 끝났습니다. 새로운 뉴스를 들으시려면 앱을 잠시 후 다시 실행해주세요. 초기 메뉴로 돌아가시려면 화면을 두 번 터치하세요.";
+        }else {
+            tts_desc = newstitle[seq]+". 이 뉴스를 들으시려면 한 번 터치, 다른 뉴스를 들으시려면 길게 터치해주세요";
+        }
+
         tts.speak(tts_desc, TextToSpeech.QUEUE_FLUSH,null);
     }
 
