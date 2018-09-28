@@ -159,8 +159,7 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         });
     }
-
-    // 일단 1개짜리 해놓고 어레이리스트 사용하는걸로
+    
     public String[][] newsJsonParser(String jsonString) throws JSONException {
 
         try {

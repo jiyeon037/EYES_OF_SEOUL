@@ -144,7 +144,6 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
             articleBodyContents = doc.select("div#articleBodyContents");
 
-            //newsEndContents = doc.select("div#newsEndContents");
 
 
             if(!articeBody.isEmpty()){
