@@ -38,7 +38,6 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
     Elements articeBody = null;
     Elements articleBodyContents = null;
-   // Elements newsEndContents = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +54,6 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         articeBody = null;
         articleBodyContents = null;
-        //newsEndContents = null;
 
         Intent intent = getIntent();
         articleURL = intent.getStringExtra("newslink");
@@ -121,7 +119,7 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
     public void onInit(int i) {
 
         if(intro == 0){
-            tts.speak("뉴스를 재생합니다. 중간에 화면을 길게 누르면 다음 뉴스 제목을 재생합니다. 화면을 두 번 터치하시면 초기 메뉴로 돌아갑니다. " + crwaledDesc, TextToSpeech.QUEUE_FLUSH,null);
+            tts.speak("뉴스를 재생합니다. 중간에 화면을 길게 터치하면 다음 뉴스 제목을 재생합니다. 화면을 두 번 터치하시면 초기 메뉴로 돌아갑니다. " + crwaledDesc, TextToSpeech.QUEUE_FLUSH,null);
         }else if(intro != 0){
             tts.speak(crwaledDesc, TextToSpeech.QUEUE_FLUSH,null);
         }
@@ -149,19 +147,14 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
             //newsEndContents = doc.select("div#newsEndContents");
 
 
-            if(articeBody != null){
+            if(!articeBody.isEmpty()){
                 str = articeBody.text();
             }
 
 
-            if(articleBodyContents != null) {
+            if(!articleBodyContents.isEmpty()) {
                 str = articleBodyContents.text();
             }
-/*
-            if(newsEndContents != null){
-                str = newsEndContents.text();
-            }
-*/
 
             Log.d("bbbbbbbbbbbbbb",str);
 

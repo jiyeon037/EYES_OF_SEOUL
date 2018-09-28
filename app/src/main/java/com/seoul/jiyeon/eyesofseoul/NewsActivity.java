@@ -83,7 +83,7 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
         try {
             newsarray = newsJsonParser(forAsynkTaskS);
             int j=0;
-            for(int i=0; i<count; i++){
+            for(int i=0; i<count; i++) {
 
                 Log.d("33333333333",newsarray[i][0]);
                 Log.d("33333333333",newsarray[i][1]);
@@ -91,39 +91,33 @@ public class NewsActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     newstitle[j] = newsarray[i][0];
                     newslink[j] = newsarray[i][1];
 
-                    if(newstitle[j].contains("<b>")){
-                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;","");
-                    }else if(newstitle[j].contains("</b>")){
-                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;","");
-                    }else if(newstitle[j].contains("&quot;")){
-                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;","");
+                    if (newstitle[j].contains("<b>")) {
+                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;|&amp;|&lt;|&gt;", "");
+                    } else if (newstitle[j].contains("</b>")) {
+                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;|&amp;|&lt;|&gt;", "");
+                    } else if (newstitle[j].contains("&quot;")) {
+                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;|&amp;|&lt;|&gt;", "");
+                    } else if (newstitle[j].contains("&amp;")) {
+                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;|&amp;|&lt;|&gt;", "");
+                    } else if (newstitle[j].contains("&lt;")) {
+                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;|&amp;|&lt;|&gt;", "");
+                    } else if (newstitle[j].contains("&gt;")) {
+                        newstitle[j] = newstitle[j].replaceAll("<b>|</b>|&quot;|&amp;|&lt;|&gt;", "");
                     }
                     j++;
                 }
             }
-
 
             for(int i=0; i<j; i++){
                 Log.d("11111111111111",newstitle[i]);
                 Log.d("2222222222222",newslink[i]);
             }
 
-
-      /*
-                StringTokenizer st = new StringTokenizer(newstitle, "<b>|</b>|&quot;");
-                while (st.hasMoreTokens()) {
-                    newstitle = st.nextToken().toString();
-                }
-*/
-            //Log.d("22222222222222",newstitle);
-
             if(newstitle[seq] == null){
                 titleText.setText("목록 끝");
             }else{
                 titleText.setText(newstitle[seq]);
             }
-
-
 
         } catch (JSONException e) {
             e.printStackTrace();
