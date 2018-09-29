@@ -14,11 +14,11 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -38,7 +38,6 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
     Elements articeBody = null;
     Elements articleBodyContents = null;
-   // Elements newsEndContents = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +54,6 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         articeBody = null;
         articleBodyContents = null;
-        //newsEndContents = null;
 
         Intent intent = getIntent();
         articleURL = intent.getStringExtra("newslink");
@@ -99,6 +97,8 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
             e.printStackTrace();
         }
 
+        Log.d("cccccccccccccc",crwaledDesc);
+
     }
 
     @Override
@@ -119,7 +119,7 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
     public void onInit(int i) {
 
         if(intro == 0){
-            tts.speak("뉴스를 재생합니다. 중간에 화면을 길게 누르면 다음 뉴스 제목을 재생합니다. 화면을 두 번 터치하시면 초기 메뉴로 돌아갑니다. " + crwaledDesc, TextToSpeech.QUEUE_FLUSH,null);
+            tts.speak("뉴스를 재생합니다. 중간에 화면을 길게 터치하면 다음 뉴스 제목을 재생합니다. 화면을 두 번 터치하시면 초기 메뉴로 돌아갑니다. " + crwaledDesc, TextToSpeech.QUEUE_FLUSH,null);
         }else if(intro != 0){
             tts.speak(crwaledDesc, TextToSpeech.QUEUE_FLUSH,null);
         }
@@ -144,7 +144,6 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
             articleBodyContents = doc.select("div#articleBodyContents");
 
-            //newsEndContents = doc.select("div#newsEndContents");
 
 
             if(!articeBody.isEmpty()){
@@ -154,26 +153,6 @@ public class DescActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
             if(!articleBodyContents.isEmpty()) {
                 str = articleBodyContents.text();
-            }
-
-/*
-            if(newsEndContents != null){
-                str = newsEndContents.text();
-            }
-*/
-            if(articeBody == null || articleBodyContents == null) { // 디버깅 위해 잠시 추가
-                Log.d("nnnnnnnnnnnnn","null 발생 !!!!!!!!!!");
-            }
-
-            if(articeBody != null || articleBodyContents != null) { // 디버깅 위해 잠시 추가
-                Log.d("nnnnnnnnnnnnn","null 발생 안함 !!!!!!!!!!");
-                if(str == null){
-                    Log.d("nnnnnnnnnnnn","str null 발생!!!!!!!!!1");
-                } else if (str.isEmpty()) {
-                    Log.d("nnnnnnnnnnnnnnn","str 비어있음!!!!!!!!!!");
-
-                }
-
             }
 
             Log.d("bbbbbbbbbbbbbb",str);
